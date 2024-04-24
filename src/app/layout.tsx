@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ReactNode } from "react";
 import { Open_Sans } from "next/font/google";
 import '@src/styles/index.scss'
+import { Layout } from "@src/components/layout";
 
 const openSans = Open_Sans({
   subsets: ["cyrillic"],
@@ -18,7 +19,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ru">
-      <body className={openSans.className}>{children}</body>
+      <body className={openSans.className}>
+        <Layout>{children}</Layout>
+      </body>
     </html>
   );
 }
