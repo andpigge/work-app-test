@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ReactNode } from "react";
 import { Open_Sans } from "next/font/google";
+import '@src/styles/index.scss'
 
 const openSans = Open_Sans({
   subsets: ["cyrillic"],
