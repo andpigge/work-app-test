@@ -16,6 +16,6 @@ export const useResize = (width: number ) => {
   }, []);
 
   return {
-    isMobile: Boolean(pageWidth < width),
+    isMobile: pageWidth ? Boolean(pageWidth < width) : false,
   };
 };
