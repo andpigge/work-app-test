@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import { Open_Sans } from "next/font/google";
 import '@src/styles/index.scss'
 import { Layout } from "@src/components/layout";
+import { ChakraProvider } from "@chakra-ui/react";
 
 const openSans = Open_Sans({
   subsets: ["cyrillic"],
@@ -20,7 +21,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ru">
       <body className={openSans.className}>
-        <Layout>{children}</Layout>
+        <ChakraProvider>
+          <Layout>{children}</Layout>
+        </ChakraProvider>
       </body>
     </html>
   );
