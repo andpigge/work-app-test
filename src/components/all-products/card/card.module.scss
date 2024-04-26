@@ -26,3 +26,12 @@
 .tag {
   display: inline-block;
 }
+
+@media (max-width: $small) {
+  .containerButtons {
+    display: flex !important;
+    flex-direction: column;
+    row-gap: 8px;
+    width: 100%;
+  }
+}

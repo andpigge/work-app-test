@@ -1,10 +1,11 @@
 import React from "react";
 
-import { Card as CardItem, Tag, Image, Text, Button, ButtonGroup, CardBody, CardFooter, Divider, Heading, Stack } from "@chakra-ui/react";
+import { Card as CardItem, Tag, Text, Button, ButtonGroup, CardBody, CardFooter, Divider, Heading, Stack } from "@chakra-ui/react";
 import NextLink from 'next/link'
 import { LinkBox } from '@chakra-ui/react'
 import styles from './card.module.scss'
 import { DeleteIcon } from '@chakra-ui/icons'
+import Image from 'next/image'
 
 export const Card = () => {
   const deleteCard = () => console.log('deleted')
@@ -19,7 +20,8 @@ export const Card = () => {
             <Image
               src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
               alt='Green double couch with wooden legs'
-              borderRadius='lg'
+              width={344}
+              height={230}
             />
             <Stack mt='6' spacing='3'>
               <Heading size='md'>Living room Sofa</Heading>
@@ -41,7 +43,7 @@ export const Card = () => {
         <Divider />
 
         <CardFooter>
-          <ButtonGroup spacing='2'>
+          <ButtonGroup spacing='2' className={styles.containerButtons}>
             <Button variant='solid' colorScheme='blue'>
               Купить товар
             </Button>

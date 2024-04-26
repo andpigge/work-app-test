@@ -4,11 +4,11 @@
 
 .list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(360px, max-content));
+  grid-template-columns: repeat(auto-fill, minmax(min-content, 384px));
   gap: 32px;
 }
 
-@media (max-width: 700px) {
+@media (max-width: $small) {
   .list {
     justify-content: center;
   }
