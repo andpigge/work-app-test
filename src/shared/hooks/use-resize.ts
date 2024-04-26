@@ -9,6 +9,7 @@ export const useResize = (width: number ) => {
   };
 
   useEffect(() => {
+    setPageWidth(window.innerWidth)
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -16,6 +17,6 @@ export const useResize = (width: number ) => {
   }, []);
 
   return {
-    isMobile: pageWidth ? Boolean(pageWidth < width) : false,
+    isMobile: typeof pageWidth === 'number' ? Boolean(pageWidth < width) : null,
   };
 };

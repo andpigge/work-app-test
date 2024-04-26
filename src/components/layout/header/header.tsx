@@ -1,11 +1,11 @@
 "use client"
 
-import React from "react";
+import React, { HTMLAttributes } from "react";
 import classNames from "classnames/bind";
 
 import styles from "./header.module.scss";
 import { usePathname } from "next/navigation";
-import { IconButton, Link, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { IconButton, Link, Menu, MenuButton, MenuItem, MenuList, Skeleton, Stack } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { NAVIGATION_ACTIVE_USER, NAVIGATION_INACTIVE_USER } from "@src/shared/constants/navigation";
 import NextLink from 'next/link'
@@ -13,7 +13,9 @@ import { useResize } from "@src/shared/hooks/use-resize";
 
 const cx = classNames.bind(styles);
 
-export const Header = () => {
+type Props = {} & HTMLAttributes<HTMLDivElement>
+
+export const Header = ({ className, ...props }: Props) => {
   const pathname = usePathname()
 
   const user = true
@@ -35,42 +37,59 @@ export const Header = () => {
     )
   }
 
-  return (
-    <div className={styles.container}>
-      {isMobile ? (
-        <Menu>
-          <MenuButton
-            as={IconButton}
-            aria-label='Options'
-            icon={<HamburgerIcon />}
-            variant='outline'
-          />
-          <MenuList>
-              {navigation.slice(0, startHalf).map((item) => {
-                return (
-                  <MenuItem
-                    key={item.id}
-                    color={pathname === item.alias ? 'teal.500' : undefined}
-                    as={NextLink}
-                    href={item.alias}>{item.name}
-                  </MenuItem>
-                )
-              })}
-          </MenuList>
-        </Menu>
-      ) : (
+  const getMenu = () => {
+    if (isMobile === null) {
+      return (
+        <>
+          <Skeleton width='20%' height='22px' />
+          <Skeleton width='20%' height='22px' />
+        </>
+      )
+    }
+
+    return (
+      <>
+        {isMobile ? (
+          <Menu>
+            <MenuButton
+              as={IconButton}
+              aria-label='Options'
+              icon={<HamburgerIcon />}
+              variant='outline'
+            />
+            <MenuList>
+                {navigation.slice(0, startHalf).map((item) => {
+                  return (
+                    <MenuItem
+                      key={item.id}
+                      color={pathname === item.alias ? 'teal.500' : undefined}
+                      as={NextLink}
+                      href={item.alias}>{item.name}
+                    </MenuItem>
+                  )
+                })}
+            </MenuList>
+          </Menu>
+        ) : (
+          <ul className={styles.list}>
+            {navigation.slice(0, startHalf).map((item) => {
+              return getLinkItem(item)
+            })}
+          </ul>
+        )}
+
         <ul className={styles.list}>
-          {navigation.slice(0, startHalf).map((item) => {
-           return getLinkItem(item)
+          {navigation.slice(startHalf, navigation.length).map((item) => {
+            return getLinkItem(item)
           })}
         </ul>
-      )}
+      </>
+    )
+  }
 
-      <ul className={styles.list}>
-        {navigation.slice(startHalf, navigation.length).map((item) => {
-          return getLinkItem(item)
-        })}
-      </ul>
-    </div>
+  return (
+    <header className={cx('container', className)} {...props}>
+      { getMenu() }
+    </header>
   )
 }
