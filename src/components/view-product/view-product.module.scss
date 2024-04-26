@@ -10,7 +10,7 @@
   width: 100%;
 }
 
-@media (max-width: $small) {
+@media (max-width: $large) {
   .container {
     flex-direction: column;
   }
