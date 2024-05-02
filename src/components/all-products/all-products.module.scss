@@ -1,0 +1,15 @@
+.container {
+  margin-bottom: 32px;
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min-content, 384px));
+  gap: 32px;
+}
+
+@media (max-width: $small) {
+  .list {
+    justify-content: center;
+  }
+}

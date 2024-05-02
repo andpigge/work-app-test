@@ -1,0 +1,6 @@
+$maxWidth: 1440;
+@mixin stretch($size, $mobSize) {
+  $addSize: $size - $mobSize;
+	$maxWidth: $maxWidth - 320;
+	font-size: calc(#{$mobSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth}));
+}

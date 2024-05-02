@@ -1,0 +1,11 @@
+.container {
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.list {
+  display: flex;
+  column-gap: 28px;
+}
