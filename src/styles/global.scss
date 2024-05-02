@@ -1,3 +1,47 @@
+@import "normalize";
+
+html {
+  @media (min-width: 1920px) {
+    font-size: calc(100vw / 1440 * 16);
+  }
+}
+
 ul {
   list-style: none;
+}
+
+.headline2 {
+  font-family: var(--font-open-sans), Arial, sans-serif;
+  @include stretch(20, 16);
+  line-height: 130%;
+  font-weight: 600;
+}
+
+.headline3 {
+  font-family: var(--font-open-sans), Arial, sans-serif;
+  @include stretch(18, 16);
+  line-height: 130%;
+  font-weight: 600;
+}
+
+.text-large {
+  font-family: var(--font-open-sans), Arial, sans-serif;
+  @include stretch(18, 16);
+  line-height: 160%;
+  font-weight: 400;
+}
+
+.text-medium {
+  font-family: var(--font-open-sans), Arial, sans-serif;
+  @include stretch(16, 10);
+  line-height: 150%;
+  font-weight: 400;
+}
+
+.limit-two-lines {
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  overflow: hidden;
 }

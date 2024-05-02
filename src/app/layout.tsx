@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ReactNode } from "react";
 import { Open_Sans } from "next/font/google";
-import '@src/styles/index.scss'
+import '@src/styles/global.scss';
 import { Layout } from "@src/components/layout";
 import { ChakraProvider } from "@chakra-ui/react";
 
