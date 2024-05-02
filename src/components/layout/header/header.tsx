@@ -10,6 +10,7 @@ import { HamburgerIcon } from "@chakra-ui/icons";
 import { NAVIGATION_ACTIVE_USER, NAVIGATION_INACTIVE_USER } from "@src/shared/constants/navigation";
 import NextLink from 'next/link'
 import { useResize } from "@src/shared/hooks/use-resize";
+import { MOBILE } from "@src/shared/breakpoints";
 
 const cx = classNames.bind(styles);
 
@@ -23,7 +24,7 @@ export const Header = ({ className, ...props }: Props) => {
   const navigation = user ? NAVIGATION_ACTIVE_USER : NAVIGATION_INACTIVE_USER;
   const startHalf = Math.floor(navigation.length / 2) || 1
 
-  const { isMobile } = useResize(610)
+  const { isMobile } = useResize(MOBILE)
 
   const getLinkItem = (item: { id: number; alias: string; name: string; }) => {
     return (
