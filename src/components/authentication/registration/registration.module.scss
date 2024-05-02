@@ -1,1 +1,14 @@
+.container {
+  display: grid;
+  row-gap: 22px;
+}
 
+.text {
+  margin-bottom: 8px;
+}
+
+.containerElement {
+  display: flex;
+  align-items: center;
+  column-gap: 18px;
+}

@@ -1,8 +1,86 @@
-import React from "react";
+import React, { useState } from "react";
+import classNames from 'classnames/bind';
+
+import { Input, Button, ButtonGroup, InputGroup, InputRightElement } from '@chakra-ui/react'
+import { CheckIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import styles from "./registration.module.scss";
 
-export const Registration = () => {
+const cx = classNames.bind(styles);
+
+export const Registration = ({cb}: {cb: () => void}) => {
+  const [show, setShow] = useState<'hide' | 'show'>('hide')
+
+  const handleClickSetShow = () => setShow(show === 'hide' ? 'show' : 'hide')
+
+  const submitForm = () => (console.log('registration'))
+
   return (
-    <h1>Registration</h1>
+    <form className={styles.container} onSubmit={submitForm}>
+      <label>
+        <p className={cx('text', 'text-medium')}>Email</p>
+        <InputGroup>
+          <Input
+            className='text-medium'
+            placeholder='Введите email'
+          />
+          <InputRightElement>
+            <CheckIcon color='green.500' />
+          </InputRightElement>
+        </InputGroup>
+      </label>
+
+      <label>
+        <p className={cx('text', 'text-medium')}>Пароль</p>
+        <InputGroup>
+          <Input
+            className='text-medium'
+            placeholder='Введите пароль'
+          />
+          <InputRightElement>
+            <CheckIcon color='green.500' />
+          </InputRightElement>
+        </InputGroup>
+      </label>
+
+      <label>
+        <p className={cx('text', 'text-medium')}>Повторить пароль</p>
+        <InputGroup>
+          <Input
+            className='text-medium'
+            type={show === 'show' ? 'text' : 'password'}
+            placeholder='Введите пароль'
+            paddingRight={98}
+          />
+          <InputRightElement width={98}>
+            <div className={styles.containerElement}>
+              <Button size='sm' onClick={handleClickSetShow}>
+                {show === 'hide' ? <ViewOffIcon /> : <ViewIcon />}
+              </Button>
+              <CheckIcon color='green.500' />
+            </div>
+          </InputRightElement>
+        </InputGroup>
+      </label>
+
+      <ButtonGroup spacing='2'>
+        <Button
+          type="submit"
+          variant='solid'
+          colorScheme='blue'
+          className='text-medium'
+        >
+          Зарегистрироваться
+        </Button>
+        <Button
+          onClick={cb}
+          type="button"
+          variant='ghost'
+          colorScheme='blue'
+          className='text-medium'
+        >
+          Вход
+        </Button>
+      </ButtonGroup>
+    </form>
   )
 }

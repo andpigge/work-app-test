@@ -10,6 +10,17 @@ ul {
   list-style: none;
 }
 
+h1 {
+  margin: 0;
+}
+
+.headline1 {
+  font-family: var(--font-open-sans), Arial, sans-serif;
+  @include stretch(32, 24);
+  line-height: 130%;
+  font-weight: 400;
+}
+
 .headline2 {
   font-family: var(--font-open-sans), Arial, sans-serif;
   @include stretch(20, 16);
