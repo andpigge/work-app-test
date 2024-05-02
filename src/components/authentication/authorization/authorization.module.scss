@@ -3,6 +3,17 @@
   row-gap: 22px;
 }
 
+.containerElement {
+  display: flex;
+  align-items: center;
+  column-gap: 18px;
+}
+
 .text {
   margin-bottom: 8px;
+}
+
+.errorText {
+  color: #FC8181;
+  padding-top: 8px;
 }

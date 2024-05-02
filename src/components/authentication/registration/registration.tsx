@@ -1,65 +1,165 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import classNames from 'classnames/bind';
 
 import { Input, Button, ButtonGroup, InputGroup, InputRightElement } from '@chakra-ui/react'
 import { CheckIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import styles from "./registration.module.scss";
+import { useForm } from "react-hook-form";
+import {
+  PATTERN_EMAIL,
+  PATTERN_PASSWORD,
+  SETTINGS_EMAIL,
+  SETTINGS_PASSWORD,
+  VALIDATIONS_EMAIL,
+  VALIDATIONS_PASSWORD,
+  SETTINGS_REPEAT_PASSWORD,
+} from "@src/shared/constants/validation-fields";
 
 const cx = classNames.bind(styles);
 
-export const Registration = ({cb}: {cb: () => void}) => {
-  const [show, setShow] = useState<'hide' | 'show'>('hide')
+type RegistrationForm = {
+  email: string;
+  password: string;
+  repeatPassword: string;
+};
 
-  const handleClickSetShow = () => setShow(show === 'hide' ? 'show' : 'hide')
+export const Registration = ({cb}: {cb: () => void}) => {
+  const [showPassword, setShowPassword] = useState<'hide' | 'show'>('hide')
+  const [showRepeatPassword, setRepeatPasswordShow] = useState<'hide' | 'show'>('hide')
+
+  const handleClickShowPassword = () => setShowPassword(showPassword === 'hide' ? 'show' : 'hide')
+  const handleClickShowRepeatPassword = () => setRepeatPasswordShow(showRepeatPassword === 'hide' ? 'show' : 'hide')
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    trigger,
+    formState: { errors },
+  } = useForm<RegistrationForm>({
+    mode: "onChange",
+  });
+
+  const password = watch("password");
+  const repeatPassword = watch("repeatPassword");
+  useEffect(() => {
+    if (password || repeatPassword) {
+      trigger("password");
+      trigger("repeatPassword");
+    }
+  }, [password, repeatPassword, trigger]);
 
   const submitForm = () => (console.log('registration'))
 
   return (
-    <form className={styles.container} onSubmit={submitForm}>
+    <form className={styles.container} onSubmit={handleSubmit(submitForm)}>
       <label>
-        <p className={cx('text', 'text-medium')}>Email</p>
+        <p className={cx('text', 'text-medium')}>{SETTINGS_EMAIL.label}</p>
         <InputGroup>
           <Input
+            isInvalid={Boolean(errors.email?.message)}
+            errorBorderColor='red.300'
+            type={SETTINGS_EMAIL.type}
+            placeholder={SETTINGS_EMAIL.placeholder}
+            id="email"
             className='text-medium'
-            placeholder='Введите email'
+            {...register("email", {
+              required: VALIDATIONS_EMAIL.required,
+              minLength: { ...VALIDATIONS_EMAIL.minLength },
+              maxLength: { ...VALIDATIONS_EMAIL.maxLength },
+              pattern: { ...PATTERN_EMAIL },
+            })}
           />
-          <InputRightElement>
-            <CheckIcon color='green.500' />
-          </InputRightElement>
-        </InputGroup>
-      </label>
-
-      <label>
-        <p className={cx('text', 'text-medium')}>Пароль</p>
-        <InputGroup>
-          <Input
-            className='text-medium'
-            placeholder='Введите пароль'
-          />
-          <InputRightElement>
-            <CheckIcon color='green.500' />
-          </InputRightElement>
-        </InputGroup>
-      </label>
-
-      <label>
-        <p className={cx('text', 'text-medium')}>Повторить пароль</p>
-        <InputGroup>
-          <Input
-            className='text-medium'
-            type={show === 'show' ? 'text' : 'password'}
-            placeholder='Введите пароль'
-            paddingRight={98}
-          />
-          <InputRightElement width={98}>
-            <div className={styles.containerElement}>
-              <Button size='sm' onClick={handleClickSetShow}>
-                {show === 'hide' ? <ViewOffIcon /> : <ViewIcon />}
-              </Button>
+          {
+            !Boolean(errors.email?.message) && watch("email")
+              && (
+            <InputRightElement>
               <CheckIcon color='green.500' />
-            </div>
-          </InputRightElement>
+            </InputRightElement>
+          )}
         </InputGroup>
+        {Boolean(errors.email?.message) && <p className={styles.errorText}>{errors.email?.message}</p>}
+      </label>
+
+      <label>
+        <p className={cx('text', 'text-medium')}>{SETTINGS_PASSWORD.label}</p>
+        <InputGroup>
+          <Input
+            paddingRight={!Boolean(errors.password?.message) && password ? 98 : 16 }
+            isInvalid={Boolean(errors.password?.message)}
+            errorBorderColor='red.300'
+            placeholder={SETTINGS_PASSWORD.placeholder}
+            id="password"
+            className='text-medium'
+            type={showPassword === 'show' ? 'text' : 'password'}
+            {...register("password", {
+              required: {
+                value: true || Boolean(repeatPassword),
+                message: VALIDATIONS_PASSWORD.required,
+              },
+              minLength: { ...VALIDATIONS_PASSWORD.minLength },
+              maxLength: { ...VALIDATIONS_PASSWORD.maxLength },
+              pattern: { ...PATTERN_PASSWORD },
+              validate: VALIDATIONS_PASSWORD.validate,
+            })}
+          />
+            <InputRightElement width={!Boolean(errors.password?.message) && password ? 98 : 16 }>
+              <div className={styles.containerElement}>
+                <Button size='sm' onClick={handleClickShowPassword}>
+                  {showPassword === 'show' ? <ViewIcon /> : <ViewOffIcon />}
+                </Button>
+                {!Boolean(errors.password?.message) && password
+                  && (
+                  <CheckIcon color='green.500' />
+                )}
+            </div>
+           </InputRightElement>
+        </InputGroup>
+        {Boolean(errors.password?.message) && <p className={styles.errorText}>{errors.password?.message}</p>}
+      </label>
+
+      <label>
+        <p className={cx('text', 'text-medium')}>{SETTINGS_REPEAT_PASSWORD.label}</p>
+        <InputGroup>
+          <Input
+            paddingRight={!Boolean(errors.repeatPassword?.message) && repeatPassword ? 98 : 16 }
+            isInvalid={Boolean(errors.repeatPassword?.message)}
+            errorBorderColor='red.300'
+            placeholder={SETTINGS_REPEAT_PASSWORD.placeholder}
+            id="repeatPassword"
+            className='text-medium'
+            type={showRepeatPassword === 'show' ? 'text' : 'password'}
+            {...register("repeatPassword", {
+              required: {
+                value: true || Boolean(password),
+                message: VALIDATIONS_PASSWORD.required,
+              },
+              minLength: { ...VALIDATIONS_PASSWORD.minLength },
+              maxLength: { ...VALIDATIONS_PASSWORD.maxLength },
+              pattern: { ...PATTERN_PASSWORD },
+              validate: {
+                passwordMatches: (value = "") => {
+                  if (value.length && value !== password) {
+                    return "Пароли не совпадают";
+                  }
+                },
+                ...VALIDATIONS_PASSWORD.validate,
+              },
+            })}
+          />
+            <InputRightElement width={!Boolean(errors.repeatPassword?.message) && repeatPassword ? 98 : 16 }>
+              <div className={styles.containerElement}>
+                <Button size='sm' onClick={handleClickShowRepeatPassword}>
+                  {showRepeatPassword === 'show' ? <ViewIcon /> : <ViewOffIcon />}
+                </Button>
+                {!Boolean(errors.repeatPassword?.message) && repeatPassword
+                  && (
+                  <CheckIcon color='green.500' />
+                )}
+            </div>
+           </InputRightElement>
+        </InputGroup>
+        {Boolean(errors.repeatPassword?.message) && <p className={styles.errorText}>{errors.repeatPassword?.message}</p>}
       </label>
 
       <ButtonGroup spacing='2'>
