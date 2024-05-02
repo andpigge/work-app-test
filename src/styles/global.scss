@@ -44,7 +44,7 @@ h1 {
 
 .text-medium {
   font-family: var(--font-open-sans), Arial, sans-serif;
-  @include stretch(16, 10);
+  @include stretch(16, 14);
   line-height: 150%;
   font-weight: 400;
 }

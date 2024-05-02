@@ -7,7 +7,7 @@ import styles from "./edit-product-form.module.scss";
 
 const cx = classNames.bind(styles);
 
-export const EditProductForm = () => {
+export const EditProductForm = ({cb}: {cb: () => void}) => {
   const submitForm = () => (console.log('authorization'))
 
   return (
@@ -76,7 +76,10 @@ export const EditProductForm = () => {
             colorScheme='blue'
             className='text-medium'
           >
-            Создать продукт
+            Редактировать
+          </Button>
+          <Button variant='ghost' colorScheme='blue' onClick={cb}>
+            Отмена
           </Button>
         </ButtonGroup>
       </form>

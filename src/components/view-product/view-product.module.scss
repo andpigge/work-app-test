@@ -1,33 +1,5 @@
-.container {
-  display: flex;
-  align-items: center;
-  gap: 52px;
-  margin-bottom: 32px;
-}
-
-.containerInfo {
+.title {
   max-width: 500px;
   width: 100%;
-}
-
-@media (max-width: $large) {
-  .container {
-    flex-direction: column;
-  }
-}
-
-@media (max-width: $small) {
-  .container {
-    gap: 0;
-  }
-
-  .containerInfo {
-    padding: 32px;
-  }
-
-  .containerButtons {
-    display: flex !important;
-    flex-direction: column;
-    row-gap: 8px;
-  }
+  margin: 0 auto 32px;
 }

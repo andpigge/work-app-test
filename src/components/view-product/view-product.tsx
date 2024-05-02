@@ -1,42 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
+import classNames from 'classnames/bind';
+
 import styles from "./view-product.module.scss";
-import { Tag, Text, Button, ButtonGroup, Heading, Stack } from "@chakra-ui/react";
-import Image from 'next/image'
+import { Product } from "./product";
+import { EditProductForm } from "./edit-product-form";
+
+const cx = classNames.bind(styles);
+
+const title = {
+  view: 'Просмотр продукта',
+  edit: 'Редактирование продукта'
+}
 
 export const ViewProduct = ({ productId }: { productId: string }) => {
-  return (
-    <div className={styles.container}>
-      <Image
-        src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
-        alt='Green double couch with wooden legs'
-        width={500}
-        height={500}
-      />
-      <div className={styles.containerInfo}>
-        <Stack mb='6' spacing='3'>
-          <Heading size='md'>Living room Sofa</Heading>
-          <Text>
-            This sofa is perfect for modern tropical spaces, baroque inspired
-            spaces, earthy toned spaces and for people who love a chic design with a
-            sprinkle of vintage design.
-          </Text>
-          <div className={styles.tag}>
-            <Tag size='md' variant='outline' colorScheme='blue'>Мебель</Tag>
-          </div>
-          <Text color='blue.600' fontSize='2xl'>
-            450 Рублей
-          </Text>
-        </Stack>
+  const [typeForm, setTypeForm] = useState<'view' | 'edit'>('view');
 
-        <ButtonGroup spacing='2' className={styles.containerButtons}>
-          <Button variant='solid' colorScheme='blue'>
-            Добавить в корзину
-          </Button>
-          <Button variant='ghost' colorScheme='blue'>
-            Редактировать
-          </Button>
-        </ButtonGroup>
-      </div>
+  const setView = () => setTypeForm('view')
+  const setEdit = () => setTypeForm('edit')
+
+  return (
+    <div>
+      <h1 className={cx('headline1', 'title')}>{title[typeForm]}</h1>
+      {typeForm === 'view' && <Product cb={setEdit} />}
+      {typeForm === 'edit' && <EditProductForm cb={setView} />}
     </div>
   )
 }
