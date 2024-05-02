@@ -35,7 +35,7 @@ export const Authorization = ({cb}: {cb: () => void}) => {
 
   const handleClickSetShow = () => setShow(show === 'hide' ? 'show' : 'hide')
 
-  const submitForm = () => (console.log('authorization'))
+  const submitForm = (data: SignInForm) => (console.log(data))
 
   return (
     <form className={styles.container} onSubmit={handleSubmit(submitForm)}>
