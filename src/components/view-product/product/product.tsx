@@ -35,10 +35,21 @@ export const Product = ({ product, cb }: Props) => {
         </Stack>
 
         <ButtonGroup spacing='2' className={styles.containerButtons}>
-          <Button variant='solid' colorScheme='blue'>
+          <Button
+            type="button"
+            variant='solid'
+            colorScheme='blue'
+            className='text-medium'
+          >
             Добавить в корзину
           </Button>
-          <Button variant='ghost' colorScheme='blue' onClick={cb}>
+          <Button
+            type="button"
+            variant='ghost'
+            colorScheme='blue'
+            className='text-medium'
+            onClick={cb}
+          >
             Редактировать
           </Button>
         </ButtonGroup>

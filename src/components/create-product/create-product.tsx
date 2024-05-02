@@ -38,6 +38,7 @@ export const CreateProduct = () => {
 
   return (
     <div className={styles.container}>
+      <h1 className={cx('headline1', 'title')}>Создание продукта</h1>
       <form className={styles.containerFields} onSubmit={handleSubmit(submitForm)}>
         <label>
           <p className={cx('text', 'text-medium')}>Заголовок</p>
