@@ -49,6 +49,13 @@ h1 {
   font-weight: 400;
 }
 
+.text-small {
+  font-family: var(--font-open-sans), Arial, sans-serif;
+  @include stretch(14, 12);
+  line-height: 150%;
+  font-weight: 400;
+}
+
 .limit-two-lines {
   text-overflow: ellipsis;
   -webkit-line-clamp: 2;
