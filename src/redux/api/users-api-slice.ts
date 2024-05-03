@@ -4,7 +4,7 @@ const usersApi = apiSlice.injectEndpoints({
   endpoints: (build) => ({
     getUsers: build.query<{id: number}, void>({
       query: (data) => ({
-        url: "/users?limit=5",
+        url: "/users?limit=6",
         method: "GET",
         body: data,
       }),

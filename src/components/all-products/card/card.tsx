@@ -1,40 +1,68 @@
 import React from "react";
 
-import { Card as CardItem, Tag, Text, Button, ButtonGroup, CardBody, CardFooter, Divider, Heading, Stack } from "@chakra-ui/react";
+import { Card as CardItem, Tag, Text, Button, ButtonGroup, CardBody, CardFooter, Divider, Heading, Stack, useToast } from "@chakra-ui/react";
 import NextLink from 'next/link'
 import { LinkBox } from '@chakra-ui/react'
 import styles from './card.module.scss'
 import { DeleteIcon } from '@chakra-ui/icons'
 import Image from 'next/image'
+import { ProductItem } from "@src/shared/types/product";
+import { useDeleteProductMutation } from "@src/redux/api/products-api-slice";
+import { useAppDispatch, useAppSelector } from "@src/redux/hooks";
+import { setProducts } from "@src/redux/slices/products-slice";
 
-export const Card = () => {
-  const deleteCard = () => console.log('deleted')
+export const Card = ({ product }: { product: ProductItem }) => {
+  const [deleteProduct] = useDeleteProductMutation();
+
+  const { products } = useAppSelector((store) => store.products);
+
+  const toast = useToast()
+
+  const dispatch = useAppDispatch();
+
+  const deleteCard = (id: number) => {
+    const newProducts = products?.concat() || []
+    const productsFilter = newProducts?.filter((item) => item.id !== product.id) || []
+    dispatch(setProducts(productsFilter))
+
+    deleteProduct(id)
+      .unwrap()
+      .then()
+      .catch((error: { data: string }) => {
+        dispatch(setProducts(newProducts))
+        toast({
+          title: error.data,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
+      })
+  }
 
   return (
-      <CardItem maxW='sm' className={styles.card}>
+      <CardItem maxW='sm' className={styles.card} height={'100%'}>
         <CardBody>
-          <button className={styles.button} onClick={deleteCard}>
+          <button className={styles.button} onClick={() => deleteCard(product.id)}>
             <DeleteIcon w={6} h={6} color="red.500" />
           </button>
-          <LinkBox as={NextLink} href='/1'>
+          <LinkBox as={NextLink} href={`/${product.id}`}>
             <Image
-              src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
-              alt='Green double couch with wooden legs'
+              src={product.image}
+              alt={product.title}
               width={344}
-              height={230}
+              height={280}
+              className={styles.image}
             />
             <Stack mt='6' spacing='3'>
-              <Heading size='md'>Living room Sofa</Heading>
-              <Text>
-                This sofa is perfect for modern tropical spaces, baroque inspired
-                spaces, earthy toned spaces and for people who love a chic design with a
-                sprinkle of vintage design.
+              <Heading size='md'>{product.title}</Heading>
+              <Text className="limit-two-lines">
+                {product.description}
               </Text>
               <div className={styles.tag}>
-                <Tag size='md' variant='outline' colorScheme='blue'>Мебель</Tag>
+                <Tag size='md' variant='outline' colorScheme='blue'>{product.category}</Tag>
               </div>
               <Text color='blue.600' fontSize='2xl'>
-                450 Рублей
+                {product.price} рублей
               </Text>
             </Stack>
           </LinkBox>
