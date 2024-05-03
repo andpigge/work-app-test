@@ -1,0 +1,44 @@
+.card {
+  transition: .2s ease-out;
+
+  &:hover {
+    transition: .3s;
+    box-shadow: 0px 2px 8px 4px #e2e2e2;
+  }
+}
+
+.button {
+  transition:  border-color .3s ease-out, background-color .4s ease-out;
+  margin-left: auto;
+  padding: 12px;
+  margin-bottom: 12px;
+  display: block;
+  border: 1px solid transparent;
+  border-radius: 6px;
+
+  &:hover {
+    transition: border-color .3s ease-in-out, background-color .5s ease-out;
+    border-color:#E2E8F0;
+    background: #f5f5f5;
+  }
+}
+
+.tag {
+  display: inline-block;
+}
+
+.image {
+  width: 344px;
+  height: 280px;
+  object-fit: contain;
+  margin: 0 auto;
+}
+
+@media (max-width: $small) {
+  .containerButtons {
+    display: flex !important;
+    flex-direction: column;
+    row-gap: 8px;
+    width: 100%;
+  }
+}

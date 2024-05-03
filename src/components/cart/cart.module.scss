@@ -1,0 +1,132 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  gap: 32px 52px;
+  align-items: start;
+}
+
+.containerText {
+  display: grid;
+  grid-template-columns: 1fr 16px;
+  max-width: 120px;
+}
+
+.image {
+  width: 140px;
+  height: auto;
+}
+
+.containerCount {
+  display: flex;
+  gap: 18px 38px;
+  flex-wrap: wrap;
+}
+
+.item {
+  gap: 18px 38px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  padding: 20px 108px 20px 32px;
+  position: relative;
+  border-radius: 8px;
+  align-items: center;
+  display: inline-flex;
+  flex-wrap: wrap;
+}
+
+.cardList {
+  width: 100%;
+  max-width: 820px;
+}
+
+.containerInfo {
+  display: flex;
+  flex-direction: column;
+  max-width: 240px;
+  row-gap: 8px;
+}
+
+.price {
+  margin-left: auto;
+  color: #2b6cb0;
+  width: 100%;
+  text-align: center;
+  display: inline;
+}
+
+.limit-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
+
+.buttonContainer {
+  display: flex;
+  align-items: center;
+}
+
+.fieldCount {
+  text-align: center;
+}
+
+.button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  transition: border-color 0.3s ease-out, background-color 0.4s ease-out;
+  padding: 12px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+
+  &:hover {
+    transition: border-color .3s ease-in-out, background-color .5s ease-out;
+    border-color:#E2E8F0;
+    background: #f5f5f5;
+  }
+}
+
+.containerSum {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  padding: 20px 32px;
+  border-radius: 8px;
+  max-width: 320px;
+  width: 100%;
+}
+
+.titleSum {
+  margin-bottom: 12px;
+}
+
+.list {
+  display: grid;
+  row-gap: 12px;
+}
+
+.containerPrice {
+  display: flex;
+  column-gap: 52px;
+}
+
+@media (max-width: 720px) {
+  .container {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 520px) {
+  .containerSum {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-width: none;
+  }
+
+  .container {
+    flex-wrap: wrap;
+  }
+
+  .item {
+    padding: 20px;
+  }
+}
