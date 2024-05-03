@@ -3,12 +3,12 @@ import { GetProductItem } from "@src/shared/types/product";
 
 type UserState = {
   productsSuccess: boolean;
-  products: GetProductItem[] | null;
+  products: GetProductItem[];
 };
 
 const initialState: UserState = {
   productsSuccess: false,
-  products: null,
+  products: [],
 };
 
 export const productsSlice = createSlice({
@@ -21,9 +21,12 @@ export const productsSlice = createSlice({
     setProductsSuccess: (state) => {
       state.productsSuccess = true;
     },
+    pushProducts: (state, action: PayloadAction<GetProductItem>) => {
+      state.products.unshift(action.payload);
+    },
   },
 });
 
-export const { setProducts, setProductsSuccess } = productsSlice.actions;
+export const { setProducts, setProductsSuccess, pushProducts } = productsSlice.actions;
 
 export const productsReducer = productsSlice.reducer;

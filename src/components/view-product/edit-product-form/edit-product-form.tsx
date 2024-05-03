@@ -5,7 +5,7 @@ import { Input, Button, ButtonGroup, InputGroup, InputRightElement, InputLeftEle
 import { CheckIcon,  } from '@chakra-ui/icons'
 import styles from "./edit-product-form.module.scss";
 import { useForm } from "react-hook-form";
-import { VALIDATIONS_TEXTAREA } from "@src/shared/constants/validation-fields";
+import { PATTERN_URL, VALIDATIONS_TEXTAREA } from "@src/shared/constants/validation-fields";
 import { GetProductItem } from "@src/shared/types/product";
 import { useEditProductMutation } from "@src/redux/api/products-api-slice";
 import { setProducts } from "@src/redux/slices/products-slice";
@@ -63,6 +63,12 @@ export const EditProductForm = ({cb, product}: {cb: () => void, product: GetProd
       .then((data) => {
         const productsFilter = products?.filter((item) => item.id !== product.id) || []
         dispatch(setProducts([data, ...productsFilter]))
+        toast({
+          title: 'Успешно изменено',
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+        })
         router.push('/')
       })
       .catch((error: { data: string }) => {
@@ -150,7 +156,7 @@ export const EditProductForm = ({cb, product}: {cb: () => void, product: GetProd
               type='text'
               className='text-medium'
               placeholder='Введите путь к картинке'
-              {...register("image", {required: true})}
+              {...register("image", {required: true, pattern: { ...PATTERN_URL }})}
             />
             {
               !Boolean(errors.image?.message) && watch("image")
@@ -160,6 +166,7 @@ export const EditProductForm = ({cb, product}: {cb: () => void, product: GetProd
               </InputRightElement>
             )}
           </InputGroup>
+          {Boolean(errors.image?.message) && <p className={styles.errorText}>{errors.image?.message}</p>}
         </label>
 
         <label>

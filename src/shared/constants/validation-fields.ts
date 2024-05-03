@@ -1,3 +1,6 @@
+const pattern =
+  /(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?\/[a-zA-Z0-9]{2,}|((https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?)|(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})?/g;
+
 export const PATTERN_EMAIL = {
   message: "Указан некорректный адрес электронной почты",
   value: RegExp("^[a-zA-Z0-9\\-._]+@[a-zA-Z0-9\\-._]+\\.[a-zA-Z0-9\\-._]+$"),
@@ -6,6 +9,11 @@ export const PATTERN_EMAIL = {
 export const PATTERN_PASSWORD = {
   message: "Указан недопустимый символ",
   value: RegExp("^[а-яёА-ЯЁa-zA-Z0-9~!?@#$%^&*_\\-+()\\[\\]{}></\\|\"\\'.,:]*$"),
+};
+
+export const PATTERN_URL = {
+  message: "Указан недопустимый адрес картинки",
+  value: RegExp(pattern),
 };
 
 export const SETTINGS_EMAIL = {
