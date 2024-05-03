@@ -27,6 +27,13 @@
   display: inline-block;
 }
 
+.image {
+  width: 344px;
+  height: 280px;
+  object-fit: contain;
+  margin: 0 auto;
+}
+
 @media (max-width: $small) {
   .containerButtons {
     display: flex !important;

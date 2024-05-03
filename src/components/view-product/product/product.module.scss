@@ -11,6 +11,13 @@
   width: 100%;
 }
 
+.image {
+  width: 500px;
+  height: 500px;
+  object-fit: contain;
+  margin: 0 auto;
+}
+
 @media (max-width: $large) {
   .container {
     flex-direction: column;

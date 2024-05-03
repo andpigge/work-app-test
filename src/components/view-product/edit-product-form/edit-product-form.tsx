@@ -1,39 +1,84 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import classNames from 'classnames/bind';
 
-import { Input, Button, ButtonGroup, InputGroup, InputRightElement, InputLeftElement, Textarea, NumberInput, NumberInputField } from '@chakra-ui/react'
+import { Input, Button, ButtonGroup, InputGroup, InputRightElement, InputLeftElement, Textarea, NumberInput, NumberInputField, useToast } from '@chakra-ui/react'
 import { CheckIcon,  } from '@chakra-ui/icons'
 import styles from "./edit-product-form.module.scss";
 import { useForm } from "react-hook-form";
-import { VALIDATIONS_TEXTAREA } from "@src/shared/constants/validation-fields";
+import { PATTERN_URL, VALIDATIONS_TEXTAREA } from "@src/shared/constants/validation-fields";
+import { GetProductItem } from "@src/shared/types/product";
+import { useEditProductMutation } from "@src/redux/api/products-api-slice";
+import { setProducts } from "@src/redux/slices/products-slice";
+import { useAppDispatch, useAppSelector } from "@src/redux/hooks";
+import { useRouter } from "next/navigation";
 
 const cx = classNames.bind(styles);
 
 export type EditProductForm = {
   title: string,
-  cost: string,
+  price: string,
   description: string,
   image: string,
   category: string,
 }
 
-export const EditProductForm = ({cb}: {cb: () => void}) => {
-  const format = (val: string | number) => String(`₽ ${Number(val)}`.replace(/(\d)(?=(\d{3})+(\D|$))/g, '$1 '))
-  const parse = (val: string) => Number(val.replaceAll(' ', '').replace(/^₽/, ''))
-  const [price, setPrice] = useState<number>(101)
+export const EditProductForm = ({cb, product}: {cb: () => void, product: GetProductItem}) => {
+  const [editProduct] = useEditProductMutation();
+
+  const router = useRouter();
+
+  const { products } = useAppSelector((store) => store.products);
+
+  const toast = useToast()
+
+  const dispatch = useAppDispatch();
 
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm<EditProductForm>({
     mode: "onChange",
   });
 
+  useEffect(() => {
+      reset(
+        {
+          category: product.category,
+          description: product.description,
+          image: product.image,
+          price: String(product.price),
+          title: product.title
+        },
+        { keepDirty: true }
+      );
+  }, [product]);
+
   const submitForm = (data: EditProductForm) => {
-    const {cost, ...restData} = data
-    console.log({price, ...restData})
+    const {price, ...restData} = data;
+    editProduct({ id: product.id, data: {price: Number(price), ...restData} })
+      .unwrap()
+      .then((data) => {
+        const productsFilter = products?.filter((item) => item.id !== product.id) || []
+        dispatch(setProducts([data, ...productsFilter]))
+        toast({
+          title: 'Успешно изменено',
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+        })
+        router.push('/')
+      })
+      .catch((error: { data: string }) => {
+        toast({
+          title: error.data,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
+      })
   }
 
   return (
@@ -62,17 +107,16 @@ export const EditProductForm = ({cb}: {cb: () => void}) => {
         <label>
           <p className={cx('text', 'text-medium')}>Цена</p>
           <InputGroup>
-            <NumberInput width='100%' min={101} max={99999999} value={format(price)} onChange={(value => setPrice(parse(value)))}>
+            <NumberInput width='100%' defaultValue={product.price}>
               <NumberInputField
-                pattern={undefined}
                 id="price"
                 className='text-medium'
                 placeholder='Введите цену'
-                {...register("cost")}
+                {...register("price", {required: true})}
               />
             </NumberInput>
             {
-              !Boolean(errors.cost?.message) && price
+              !Boolean(errors.price?.message) && watch("price")
                 && (
               <InputRightElement>
                 <CheckIcon color='green.500' />
@@ -112,7 +156,7 @@ export const EditProductForm = ({cb}: {cb: () => void}) => {
               type='text'
               className='text-medium'
               placeholder='Введите путь к картинке'
-              {...register("image", {required: true})}
+              {...register("image", {required: true, pattern: { ...PATTERN_URL }})}
             />
             {
               !Boolean(errors.image?.message) && watch("image")
@@ -122,6 +166,7 @@ export const EditProductForm = ({cb}: {cb: () => void}) => {
               </InputRightElement>
             )}
           </InputGroup>
+          {Boolean(errors.image?.message) && <p className={styles.errorText}>{errors.image?.message}</p>}
         </label>
 
         <label>
