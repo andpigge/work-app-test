@@ -6,6 +6,7 @@ import { CheckIcon,  } from '@chakra-ui/icons'
 import styles from "./edit-product-form.module.scss";
 import { useForm } from "react-hook-form";
 import { VALIDATIONS_TEXTAREA } from "@src/shared/constants/validation-fields";
+import { ProductItem } from "@src/shared/types/product";
 
 const cx = classNames.bind(styles);
 
@@ -17,7 +18,7 @@ export type EditProductForm = {
   category: string,
 }
 
-export const EditProductForm = ({cb}: {cb: () => void}) => {
+export const EditProductForm = ({cb, product}: {cb: () => void, product: ProductItem}) => {
   const format = (val: string | number) => String(`₽ ${Number(val)}`.replace(/(\d)(?=(\d{3})+(\D|$))/g, '$1 '))
   const parse = (val: string) => Number(val.replaceAll(' ', '').replace(/^₽/, ''))
   const [price, setPrice] = useState<number>(101)

@@ -6,7 +6,7 @@ import { ProductItem } from "@src/shared/types/product";
 import { getCookie } from "@src/shared/lib/get-cookie";
 
 type Props = {
-  product?: ProductItem;
+  product: ProductItem;
   cb: () => void
 }
 
@@ -16,24 +16,23 @@ export const Product = ({ product, cb }: Props) => {
   return (
     <div className={styles.container}>
       <Image
-        src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
-        alt='Green double couch with wooden legs'
+        src={product.image}
+        alt={product.title}
         width={500}
         height={500}
+        className={styles.image}
       />
       <div className={styles.containerInfo}>
         <Stack mb='6' spacing='3'>
-          <Heading size='md'>Living room Sofa</Heading>
+          <Heading size='md'>{product.title}</Heading>
           <Text>
-            This sofa is perfect for modern tropical spaces, baroque inspired
-            spaces, earthy toned spaces and for people who love a chic design with a
-            sprinkle of vintage design.
+            {product.description}
           </Text>
           <div className={styles.tag}>
-            <Tag size='md' variant='outline' colorScheme='blue'>Мебель</Tag>
+            <Tag size='md' variant='outline' colorScheme='blue'>{product.category}</Tag>
           </div>
           <Text color='blue.600' fontSize='2xl'>
-            450 Рублей
+            {product.price} рублей
           </Text>
         </Stack>
 
