@@ -2,16 +2,16 @@ import React from "react";
 import styles from "./product.module.scss";
 import { Tag, Text, Button, ButtonGroup, Heading, Stack } from "@chakra-ui/react";
 import Image from 'next/image'
-import { ProductItem } from "@src/shared/types/product";
-import { getCookie } from "@src/shared/lib/get-cookie";
+import { GetProductItem } from "@src/shared/types/product";
+import { useAppSelector } from "@src/redux/hooks";
 
 type Props = {
-  product: ProductItem;
+  product: GetProductItem;
   cb: () => void
 }
 
 export const Product = ({ product, cb }: Props) => {
-  const authorizing = getCookie("access_token")
+  const { authorizing } = useAppSelector((store) => store.user);
 
   return (
     <div className={styles.container}>

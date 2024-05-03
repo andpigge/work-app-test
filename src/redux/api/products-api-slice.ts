@@ -22,6 +22,12 @@ const productsApi = apiSlice.injectEndpoints({
         method: "DELETE",
       }),
     }),
+    getProductById: build.query<GetProductItem, number>({
+      query: (id) => ({
+        url: `/products/${id}/`,
+        method: "GET",
+      }),
+    }),
     editProduct: build.mutation<GetProductItem, {id: number, data: PostProductItem}>({
       query: ({ id, data }) => ({
         url: `/products/${id}/`,
@@ -32,4 +38,4 @@ const productsApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetProductsQuery, useCreateProductMutation, useDeleteProductMutation, useEditProductMutation } = productsApi;
+export const { useGetProductsQuery, useCreateProductMutation, useDeleteProductMutation, useEditProductMutation, useGetProductByIdQuery } = productsApi;

@@ -4,8 +4,8 @@ import classNames from 'classnames/bind';
 import styles from "./view-product.module.scss";
 import { Product } from "./product";
 import { EditProductForm } from "./edit-product-form";
-import { getCookie } from "@src/shared/lib/get-cookie";
 import { useAppSelector } from "@src/redux/hooks";
+import { useGetProductByIdQuery } from "@src/redux/api/products-api-slice";
 
 const cx = classNames.bind(styles);
 
@@ -18,9 +18,9 @@ export const ViewProduct = ({ productId }: { productId: string }) => {
   const [typeForm, setTypeForm] = useState<'view' | 'edit'>('view');
 
   const { products } = useAppSelector((store) => store.products);
-  const product = products?.find((item) => item.id === Number(productId))
+  const {data} = useGetProductByIdQuery(Number(productId));
 
-  const authorizing = getCookie("access_token")
+  const product = products?.find((item) => item.id === Number(productId)) || data
 
   const setView = () => setTypeForm('view')
   const setEdit = () => setTypeForm('edit')
@@ -29,7 +29,7 @@ export const ViewProduct = ({ productId }: { productId: string }) => {
     product && <div>
       <h1 className={cx('headline1', 'title')}>{title[typeForm]}</h1>
       {typeForm === 'view' && <Product product={product} cb={setEdit} />}
-      {(typeForm === 'edit' && authorizing) && <EditProductForm product={product} cb={setView} />}
+      {typeForm === 'edit' && <EditProductForm product={product} cb={setView} />}
     </div>
   )
 }
