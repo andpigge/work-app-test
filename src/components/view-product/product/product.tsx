@@ -3,6 +3,7 @@ import styles from "./product.module.scss";
 import { Tag, Text, Button, ButtonGroup, Heading, Stack } from "@chakra-ui/react";
 import Image from 'next/image'
 import { ProductItem } from "@src/shared/types/product";
+import { getCookie } from "@src/shared/lib/get-cookie";
 
 type Props = {
   product?: ProductItem;
@@ -10,6 +11,8 @@ type Props = {
 }
 
 export const Product = ({ product, cb }: Props) => {
+  const authorizing = getCookie("access_token")
+
   return (
     <div className={styles.container}>
       <Image
@@ -43,7 +46,7 @@ export const Product = ({ product, cb }: Props) => {
           >
             Добавить в корзину
           </Button>
-          <Button
+          {authorizing && <Button
             type="button"
             variant='ghost'
             colorScheme='blue'
@@ -51,7 +54,7 @@ export const Product = ({ product, cb }: Props) => {
             onClick={cb}
           >
             Редактировать
-          </Button>
+          </Button>}
         </ButtonGroup>
       </div>
     </div>
