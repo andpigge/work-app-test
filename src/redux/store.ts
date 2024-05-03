@@ -4,9 +4,13 @@ import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query/react";
 
 import { apiSlice } from "@src/redux/api/api-slice";
+import { userReducer } from "./slices/users-slice";
 
 export const store = configureStore({
-  reducer: {},
+  reducer: {
+    user: userReducer,
+    [apiSlice.reducerPath]: apiSlice.reducer,
+  },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(apiSlice.middleware),
 });
 

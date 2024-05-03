@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import classNames from 'classnames/bind';
 
-import { Input, Button, ButtonGroup, InputGroup, InputRightElement } from '@chakra-ui/react'
+import { Input, Button, ButtonGroup, InputGroup, InputRightElement, useToast } from '@chakra-ui/react'
 import { CheckIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import { useForm } from "react-hook-form";
 import {
@@ -13,6 +13,11 @@ import {
   VALIDATIONS_PASSWORD,
 } from "@src/shared/constants/validation-fields";
 import styles from "./authorization.module.scss";
+import { useLoginUserMutation } from "@src/redux/api/authentication-api-slice";
+import { setCookie, removeCookie } from "typescript-cookie";
+import { useRouter } from "next/navigation";
+import { setAuthorizing } from "@src/redux/slices/users-slice";
+import { useAppDispatch } from "@src/redux/hooks";
 
 const cx = classNames.bind(styles);
 
@@ -22,6 +27,13 @@ type SignInForm = {
 };
 
 export const Authorization = ({cb}: {cb: () => void}) => {
+  const [loginUser] = useLoginUserMutation();
+  const dispatch = useAppDispatch();
+
+  const router = useRouter();
+
+  const toast = useToast()
+
   const [show, setShow] = useState<'hide' | 'show'>('hide')
 
   const {
@@ -35,7 +47,31 @@ export const Authorization = ({cb}: {cb: () => void}) => {
 
   const handleClickSetShow = () => setShow(show === 'hide' ? 'show' : 'hide')
 
-  const submitForm = (data: SignInForm) => (console.log(data))
+  const submitForm = ({email, password}: SignInForm) => {
+    loginUser({username: 'mor_2314', password: '83r5^_'})
+      .unwrap()
+      .then(({ token }) => {
+        setCookie("access_token", token);
+        dispatch(setAuthorizing(true));
+        toast({
+          title: 'Успешный вход',
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+        })
+        router.push('/');
+      })
+      .catch((error: {data: string}) => {
+        console.log("🚀 ~ file: registration.tsx:48 ~ onSubmit ~ error:", error);
+        removeCookie("access_token");
+        toast({
+          title: error.data || "Аккаунт не найден",
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
+      });
+  }
 
   return (
     <form className={styles.container} onSubmit={handleSubmit(submitForm)}>

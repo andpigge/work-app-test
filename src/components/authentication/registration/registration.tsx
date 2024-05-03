@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import classNames from 'classnames/bind';
+import { useAppDispatch } from "@src/redux/hooks";
 
-import { Input, Button, ButtonGroup, InputGroup, InputRightElement } from '@chakra-ui/react'
+import { Input, Button, ButtonGroup, InputGroup, InputRightElement, useToast } from '@chakra-ui/react'
 import { CheckIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import styles from "./registration.module.scss";
 import { useForm } from "react-hook-form";
@@ -14,6 +15,8 @@ import {
   VALIDATIONS_PASSWORD,
   SETTINGS_REPEAT_PASSWORD,
 } from "@src/shared/constants/validation-fields";
+import { useRegisterUserMutation } from "@src/redux/api/authentication-api-slice";
+import { saveUserId } from "@src/redux/slices/users-slice";
 
 const cx = classNames.bind(styles);
 
@@ -24,6 +27,11 @@ type RegistrationForm = {
 };
 
 export const Registration = ({cb}: {cb: () => void}) => {
+  const [registerUser] = useRegisterUserMutation();
+
+  const dispatch = useAppDispatch();
+  const toast = useToast()
+
   const [showPassword, setShowPassword] = useState<'hide' | 'show'>('hide')
   const [showRepeatPassword, setRepeatPasswordShow] = useState<'hide' | 'show'>('hide')
 
@@ -49,7 +57,25 @@ export const Registration = ({cb}: {cb: () => void}) => {
     }
   }, [password, repeatPassword, trigger]);
 
-  const submitForm = () => (console.log('registration'))
+  const submitForm = (data: RegistrationForm) => {
+    const {repeatPassword, ...restData} = data
+
+    registerUser(restData)
+      .unwrap()
+      .then((data: {id: number}) => {
+        dispatch(saveUserId(data.id));
+        toast({
+          title: 'Успешная регистрация',
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+        })
+        cb();
+      })
+      .catch((error: string) => {
+        console.log("🚀 ~ file: registration.tsx:48 ~ onSubmit ~ error:", error);
+      });
+  }
 
   return (
     <form className={styles.container} onSubmit={handleSubmit(submitForm)}>

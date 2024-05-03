@@ -22,14 +22,30 @@ export const NAVIGATION_ACTIVE_USER = [
     id: 4,
     alias: '/authentication',
     name: "Выход",
+    exit: true
   },
-]
+] as {
+  id: number,
+  alias: string,
+  name: string,
+  exit?: true
+}[]
 
 export const NAVIGATION_INACTIVE_USER = [
   ...NAVIGATION,
   {
-    id: 4,
+    id: 2,
+    alias: '/cart',
+    name: "Корзина",
+  },
+  {
+    id: 3,
     alias: '/authentication',
     name: "Вход",
   },
-]
+] as {
+  id: number,
+  alias: string,
+  name: string,
+  exit?: true
+}[]
