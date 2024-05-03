@@ -1,29 +1,35 @@
-import { ProductItem } from "@src/shared/types/product";
+import { GetProductItem, PostProductItem } from "@src/shared/types/product";
 import { apiSlice } from "./api-slice";
 
 const productsApi = apiSlice.injectEndpoints({
   endpoints: (build) => ({
-    getProducts: build.query<ProductItem[], void>({
-      query: (data) => ({
+    getProducts: build.query<GetProductItem[], void>({
+      query: () => ({
         url: "/products?limit=6",
         method: "GET",
-        body: data,
       }),
     }),
-    createProduct: build.mutation<ProductItem, void>({
+    createProduct: build.mutation<GetProductItem, PostProductItem>({
       query: (data) => ({
         url: "/products/",
         method: "POST",
         body: data,
       }),
     }),
-    deleteProduct: build.mutation<ProductItem, number>({
+    deleteProduct: build.mutation<GetProductItem, number>({
       query: (id) => ({
         url: `/products/${id}/`,
         method: "DELETE",
       }),
     }),
+    editProduct: build.mutation<GetProductItem, {id: number, data: PostProductItem}>({
+      query: ({ id, data }) => ({
+        url: `/products/${id}/`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useGetProductsQuery, useCreateProductMutation, useDeleteProductMutation } = productsApi;
+export const { useGetProductsQuery, useCreateProductMutation, useDeleteProductMutation, useEditProductMutation } = productsApi;

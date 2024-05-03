@@ -6,12 +6,12 @@ import { LinkBox } from '@chakra-ui/react'
 import styles from './card.module.scss'
 import { DeleteIcon } from '@chakra-ui/icons'
 import Image from 'next/image'
-import { ProductItem } from "@src/shared/types/product";
+import { GetProductItem } from "@src/shared/types/product";
 import { useDeleteProductMutation } from "@src/redux/api/products-api-slice";
 import { useAppDispatch, useAppSelector } from "@src/redux/hooks";
 import { setProducts } from "@src/redux/slices/products-slice";
 
-export const Card = ({ product }: { product: ProductItem }) => {
+export const Card = ({ product }: { product: GetProductItem }) => {
   const [deleteProduct] = useDeleteProductMutation();
 
   const { products } = useAppSelector((store) => store.products);
@@ -20,12 +20,12 @@ export const Card = ({ product }: { product: ProductItem }) => {
 
   const dispatch = useAppDispatch();
 
-  const deleteCard = (id: number) => {
+  const deleteCard = () => {
     const newProducts = products?.concat() || []
     const productsFilter = newProducts?.filter((item) => item.id !== product.id) || []
     dispatch(setProducts(productsFilter))
 
-    deleteProduct(id)
+    deleteProduct(product.id)
       .unwrap()
       .then()
       .catch((error: { data: string }) => {
@@ -42,7 +42,7 @@ export const Card = ({ product }: { product: ProductItem }) => {
   return (
       <CardItem maxW='sm' className={styles.card} height={'100%'}>
         <CardBody>
-          <button className={styles.button} onClick={() => deleteCard(product.id)}>
+          <button className={styles.button} onClick={deleteCard}>
             <DeleteIcon w={6} h={6} color="red.500" />
           </button>
           <LinkBox as={NextLink} href={`/${product.id}`}>

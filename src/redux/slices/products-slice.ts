@@ -1,11 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ProductItem } from "@src/shared/types/product";
+import { GetProductItem } from "@src/shared/types/product";
 
 type UserState = {
-  products: ProductItem[] | null;
+  productsSuccess: boolean;
+  products: GetProductItem[] | null;
 };
 
 const initialState: UserState = {
+  productsSuccess: false,
   products: null,
 };
 
@@ -13,12 +15,15 @@ export const productsSlice = createSlice({
   initialState,
   name: "user",
   reducers: {
-    setProducts: (state, action: PayloadAction<ProductItem[]>) => {
+    setProducts: (state, action: PayloadAction<GetProductItem[]>) => {
       state.products = action.payload;
+    },
+    setProductsSuccess: (state) => {
+      state.productsSuccess = true;
     },
   },
 });
 
-export const { setProducts } = productsSlice.actions;
+export const { setProducts, setProductsSuccess } = productsSlice.actions;
 
 export const productsReducer = productsSlice.reducer;
