@@ -5,7 +5,7 @@ const productsApi = apiSlice.injectEndpoints({
   endpoints: (build) => ({
     getProducts: build.query<GetProductItem[], void>({
       query: () => ({
-        url: "/products?limit=6",
+        url: "/products",
         method: "GET",
       }),
     }),
@@ -38,4 +38,4 @@ const productsApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetProductsQuery, useCreateProductMutation, useDeleteProductMutation, useEditProductMutation, useGetProductByIdQuery } = productsApi;
+export const { useGetProductsQuery, useLazyGetProductsQuery, useCreateProductMutation, useDeleteProductMutation, useEditProductMutation, useGetProductByIdQuery } = productsApi;
