@@ -4,6 +4,7 @@ import { Tag, Text, Button, ButtonGroup, Heading, Stack } from "@chakra-ui/react
 import Image from 'next/image'
 import { GetProductItem } from "@src/shared/types/product";
 import { useAppSelector } from "@src/redux/hooks";
+import { useAddProductToCard } from "@src/shared/hooks/use-add-product-to-card";
 
 type Props = {
   product: GetProductItem;
@@ -12,6 +13,20 @@ type Props = {
 
 export const Product = ({ product, cb }: Props) => {
   const { authorizing } = useAppSelector((store) => store.user);
+
+  const { onClickHandler } = useAddProductToCard(product)
+
+  const { cart } = useAppSelector((store) => store.cart);
+
+  const buttonComponent = () => {
+    const findCart = cart.find((item) => item.id === product.id)
+
+    return (
+      <Button variant='solid' colorScheme='blue' onClick={() => onClickHandler(false)}>
+        {findCart ? `Добавить еще (${findCart.quantity})` : 'Добавить в корзину'}
+      </Button>
+    )
+  }
 
   return (
     <div className={styles.container}>
@@ -37,14 +52,7 @@ export const Product = ({ product, cb }: Props) => {
         </Stack>
 
         <ButtonGroup spacing='2' className={styles.containerButtons}>
-          <Button
-            type="button"
-            variant='solid'
-            colorScheme='blue'
-            className='text-medium'
-          >
-            Добавить в корзину
-          </Button>
+          { buttonComponent() }
           {authorizing && <Button
             type="button"
             variant='ghost'
