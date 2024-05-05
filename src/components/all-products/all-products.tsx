@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import styles from "./all-products.module.scss";
 import { Card } from "./card";
 import { useGetProductsQuery } from "@src/redux/api/products-api-slice";
@@ -16,7 +16,7 @@ export const AllProducts = () => {
       dispatch(setProducts(data))
       dispatch(setProductsSuccess())
     }
-  }, [dispatch, isSuccess, productsSuccess])
+  }, [isSuccess, productsSuccess])
 
   return (
     <div className={styles.container}>

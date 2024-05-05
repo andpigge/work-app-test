@@ -3,10 +3,17 @@
   max-width: 1280px;
   width: 100%;
   padding: 0 32px;
+  position: fixed;
+  top: 0;
+  right: 50%;
+  background-color: white;
+  z-index: 1;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .main {
-  margin: 0 auto;
+  margin: 122px auto 0;
   max-width: 1280px;
   width: 100%;
   padding: 0 32px;
