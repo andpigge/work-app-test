@@ -82,7 +82,10 @@ export const Header = ({ className, ...props }: Props) => {
                       key={item.id}
                       color={pathname === item.alias ? 'teal.500' : undefined}
                       as={NextLink}
-                      href={item.alias}>{item.name}
+                      href={item.alias}
+                    >
+                      {item.name}
+                      {item.showCart && cart?.length ? <sub className={cx('decor', 'text-small')}>{ cart.length }</sub> : undefined}
                     </MenuItem>
                   )
                 })}

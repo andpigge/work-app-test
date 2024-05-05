@@ -6,12 +6,14 @@ import { Card } from "./card";
 import { useAppSelector } from "@src/redux/hooks";
 import { Button } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
+import Link from "next/link";
 
 const cx = classNames.bind(styles);
 
 export const Cart = () => {
   const { productsSuccess } = useAppSelector((store) => store.products);
   const { cart, total, cartSuccess } = useAppSelector((store) => store.cart);
+  const { authorizing } = useAppSelector((store) => store.user);
 
   const [ isReady, setIsReady ] = useState(false)
 
@@ -42,7 +44,7 @@ export const Cart = () => {
             </li>
           )
         })}
-        { (((!cart?.length && !productsSuccess || !cartSuccess) ? <h2 className="headline2">Закажите что-нибудь</h2> : undefined)) }
+        { ((!cart?.length ? <h2 className="headline2">Закажите что-нибудь</h2> : undefined)) }
       </ul>
 
       {total && <div className={styles.containerSum}>
@@ -63,9 +65,29 @@ export const Cart = () => {
             {total?.price.toFixed(2)} Рублей
             </p>
           </li>
-          {cart?.length ? <Button variant='solid' colorScheme='blue' isLoading={!isReady} loadingText='Оформить заказ' disabled onClick={onClickHandler}>
-            Оформить заказ
-          </Button> : undefined}
+          {cart?.length ? (
+            <>
+              {authorizing && (
+                <Button
+                  variant='solid'
+                  colorScheme='blue'
+                  isLoading={!isReady}
+                  loadingText='Оформить заказ'
+                  onClick={onClickHandler}
+                >
+                  Оформить заказ
+              </Button>
+              )}
+              {!authorizing && (
+                <Button
+                  variant='solid'
+                  colorScheme='blue'
+                >
+                  <Link href='/authentication'>Авторизироваться</Link>
+                </Button>
+              )}
+            </>
+          ) : undefined}
         </ul>
       </div>}
     </div>
