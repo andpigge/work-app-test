@@ -12,7 +12,7 @@ import NextLink from 'next/link'
 import { useResize } from "@src/shared/hooks/use-resize";
 import { MOBILE } from "@src/shared/breakpoints";
 import { removeCookie } from "typescript-cookie";
-import { useAppDispatch } from "@src/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@src/redux/hooks";
 import { setUsers, setAuthorizing } from "@src/redux/slices/users-slice";
 import { getCookie } from "@src/shared/lib/get-cookie";
 
@@ -21,6 +21,9 @@ const cx = classNames.bind(styles);
 type Props = {} & HTMLAttributes<HTMLDivElement>
 
 export const Header = ({ className, ...props }: Props) => {
+  const { productsSuccess } = useAppSelector((store) => store.products);
+  const { cart, cartSuccess } = useAppSelector((store) => store.cart);
+
   const pathname = usePathname()
 
   const router = useRouter();
@@ -39,7 +42,7 @@ export const Header = ({ className, ...props }: Props) => {
     dispatch(setAuthorizing(false));
   };
 
-  const getLinkItem = (item: { id: number; alias: string; name: string; exit?: true }) => {
+  const getLinkItem = (item: { id: number; alias: string; name: string; exit?: true; showCart?: true }) => {
     return (
       <li key={item.id} className={styles.item} onClick={item.exit ? onHandlerClick : undefined}>
         <Link
@@ -47,12 +50,13 @@ export const Header = ({ className, ...props }: Props) => {
           as={NextLink}
           href={item.alias}>{item.name}
         </Link>
+        {item.showCart && cart?.length ? <sub className={cx('decor', 'text-small')}>{ cart.length }</sub> : undefined}
       </li>
     )
   }
 
   const getMenu = () => {
-    if (isMobile === null) {
+    if (isMobile === null && !productsSuccess || !cartSuccess) {
       return (
         <>
           <Skeleton width='20%' height='22px' />

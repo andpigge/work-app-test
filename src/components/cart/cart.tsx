@@ -3,48 +3,25 @@ import classNames from 'classnames/bind';
 
 import styles from "./cart.module.scss";
 import { Card } from "./card";
-import { useGetCartUserQuery } from "@src/redux/api/cart-api-slice";
-import { useAppDispatch, useAppSelector } from "@src/redux/hooks";
-import { setCart, setCartId, setCartSuccess } from "@src/redux/slices/cart-slice";
-import { useLazyGetProductsQuery } from "@src/redux/api/products-api-slice";
-import { getFilteredCart } from "./lib/get-filtered-cart";
-import { USER_ID } from "./constants";
+import { useAppSelector } from "@src/redux/hooks";
 import { Button } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 
 const cx = classNames.bind(styles);
 
 export const Cart = () => {
-  const [getProducts, { isSuccess: isSuccessProduct, isLoading: isLoadingProduct }] = useLazyGetProductsQuery()
-  const { cart, cartSuccess, total } = useAppSelector((store) => store.cart);
-  const { userId } = useAppSelector((store) => store.user);
-
-  const {data = [], isSuccess: isSuccessGetCart, isLoading: isLoadingGetCart} = useGetCartUserQuery(userId || USER_ID);
-
-  const dispatch = useAppDispatch();
+  const { productsSuccess } = useAppSelector((store) => store.products);
+  const { cart, total, cartSuccess } = useAppSelector((store) => store.cart);
 
   const [ isReady, setIsReady ] = useState(false)
 
   const toast = useToast()
 
   useEffect(() => {
-    if (isSuccessGetCart && !cartSuccess) {
-      getProducts()
-      .unwrap()
-      .then((products) => {
-        const cart = getFilteredCart(products, data[0])
-        dispatch(setCart(cart))
-        dispatch(setCartId(data[0].id))
-        dispatch(setCartSuccess())
-      });
-    }
-  }, [isSuccessGetCart, cartSuccess])
-
-  useEffect(() => {
-    if (isSuccessProduct && isSuccessGetCart) {
+    if (productsSuccess && cartSuccess) {
       setIsReady(true)
     }
-  }, [isSuccessProduct, isSuccessGetCart])
+  }, [productsSuccess, cartSuccess])
 
   const onClickHandler = () => {
     toast({
@@ -65,7 +42,7 @@ export const Cart = () => {
             </li>
           )
         })}
-        { ((!isLoadingGetCart && !isLoadingProduct && !cart?.length && <h2 className="headline2">Закажите что-нибудь</h2>)) }
+        { ((!cart?.length && !productsSuccess || !cartSuccess && <h2 className="headline2">Закажите что-нибудь</h2>)) }
       </ul>
 
       {total && <div className={styles.containerSum}>
