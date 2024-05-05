@@ -45,7 +45,9 @@ export const Card = ({ features, setIsReady }: Props) => {
   };
 
   useEffect(() => {
-    setTimeoutAllowed()
+    if (findQuantityProduct(data[0], features.id) !== counter) {
+      setTimeoutAllowed()
+    }
   }, [counter])
 
   useEffect(() => {

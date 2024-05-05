@@ -10,19 +10,22 @@ import { useLazyGetProductsQuery } from "@src/redux/api/products-api-slice";
 import { getFilteredCart } from "./lib/get-filtered-cart";
 import { USER_ID } from "./constants";
 import { Button } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 
 const cx = classNames.bind(styles);
 
 export const Cart = () => {
-  const [getProducts, { isSuccess: isSuccessProduct }] = useLazyGetProductsQuery()
+  const [getProducts, { isSuccess: isSuccessProduct, isLoading: isLoadingProduct }] = useLazyGetProductsQuery()
   const { cart, cartSuccess, total } = useAppSelector((store) => store.cart);
   const { userId } = useAppSelector((store) => store.user);
 
-  const {data = [], isSuccess: isSuccessGetCart} = useGetCartUserQuery(userId || USER_ID);
+  const {data = [], isSuccess: isSuccessGetCart, isLoading: isLoadingGetCart} = useGetCartUserQuery(userId || USER_ID);
 
   const dispatch = useAppDispatch();
 
   const [ isReady, setIsReady ] = useState(false)
+
+  const toast = useToast()
 
   useEffect(() => {
     if (isSuccessGetCart && !cartSuccess) {
@@ -43,6 +46,15 @@ export const Cart = () => {
     }
   }, [isSuccessProduct, isSuccessGetCart])
 
+  const onClickHandler = () => {
+    toast({
+      title: 'Ваш заказ оформлен',
+      status: 'success',
+      duration: 9000,
+      isClosable: true,
+    })
+  }
+
   return (
     <div className={styles.container}>
       <ul className={styles.cardList}>
@@ -53,7 +65,7 @@ export const Cart = () => {
             </li>
           )
         })}
-        { (!cart?.length && isSuccessProduct && isSuccessGetCart) ? <h2 className="headline2">Закажите что-нибудь</h2> : <></> }
+        { ((!isLoadingGetCart && !isLoadingProduct && !cart?.length && <h2 className="headline2">Закажите что-нибудь</h2>)) }
       </ul>
 
       {total && <div className={styles.containerSum}>
@@ -74,7 +86,7 @@ export const Cart = () => {
             {total?.price.toFixed(2)} Рублей
             </p>
           </li>
-          {cart?.length ? <Button variant='solid' colorScheme='blue' isLoading={!isReady} loadingText='Оформить заказ' disabled>
+          {cart?.length ? <Button variant='solid' colorScheme='blue' isLoading={!isReady} loadingText='Оформить заказ' disabled onClick={onClickHandler}>
             Оформить заказ
           </Button> : undefined}
         </ul>
