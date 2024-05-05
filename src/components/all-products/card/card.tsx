@@ -10,11 +10,13 @@ import { GetProductItem } from "@src/shared/types/product";
 import { useDeleteProductMutation } from "@src/redux/api/products-api-slice";
 import { useAppDispatch, useAppSelector } from "@src/redux/hooks";
 import { setProducts } from "@src/redux/slices/products-slice";
+import { setCart } from "@src/redux/slices/cart-slice";
 
 export const Card = ({ product }: { product: GetProductItem }) => {
   const [deleteProduct] = useDeleteProductMutation();
 
   const { products } = useAppSelector((store) => store.products);
+  const { cart } = useAppSelector((store) => store.cart);
 
   const toast = useToast()
 
@@ -37,6 +39,13 @@ export const Card = ({ product }: { product: GetProductItem }) => {
           isClosable: true,
         })
       })
+
+      const filterCart = cart?.filter((item) => item.id !== product.id) || []
+      dispatch(setCart(filterCart || []))
+  }
+
+  const onClickHandler = () => {
+    console.log(true)
   }
 
   return (
