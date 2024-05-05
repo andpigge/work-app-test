@@ -16,14 +16,14 @@ type Total = {
 
 type UserState = {
   cartSuccess: boolean;
-  cart: Product[] | null;
+  cart: Product[];
   total: Total | null;
   cartId: number | null;
 };
 
 const initialState: UserState = {
   cartSuccess: false,
-  cart: null,
+  cart: [],
   total: null,
   cartId: null
 };
@@ -39,7 +39,7 @@ export const cartSlice = createSlice({
   initialState,
   name: "user",
   reducers: {
-    setCart: (state, action: PayloadAction<Product[] | null>) => {
+    setCart: (state, action: PayloadAction<Product[]>) => {
       state.cart = action.payload;
       state.total = state.cart ? getTotal(state.cart) : null
     },
@@ -49,9 +49,12 @@ export const cartSlice = createSlice({
     setCartSuccess: (state) => {
       state.cartSuccess = true;
     },
+    pushCart: (state, action: PayloadAction<Product>) => {
+      state.cart.unshift(action.payload);
+    },
   },
 });
 
-export const { setCart, setCartId, setCartSuccess } = cartSlice.actions;
+export const { setCart, setCartId, setCartSuccess, pushCart } = cartSlice.actions;
 
 export const cartReducer = cartSlice.reducer;

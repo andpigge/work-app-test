@@ -42,7 +42,7 @@ export const Cart = () => {
             </li>
           )
         })}
-        { ((!cart?.length && !productsSuccess || !cartSuccess && <h2 className="headline2">Закажите что-нибудь</h2>)) }
+        { (((!cart?.length && !productsSuccess || !cartSuccess) ? <h2 className="headline2">Закажите что-нибудь</h2> : undefined)) }
       </ul>
 
       {total && <div className={styles.containerSum}>

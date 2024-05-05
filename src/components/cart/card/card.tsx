@@ -9,8 +9,9 @@ import { Product, setCart } from "@src/redux/slices/cart-slice";
 import { useAppDispatch, useAppSelector } from "@src/redux/hooks";
 import { useDeleteCartMutation, useEditCartMutation, useGetCartUserQuery } from "@src/redux/api/cart-api-slice";
 import { CountingNumber } from "@src/shared/ui/сounting-number";
-import { CHANGE_INTERVAL_CART, USER_ID } from "../constants";
+import { CHANGE_INTERVAL_CART } from "../constants";
 import { findQuantityProduct } from "../lib/find-quantity-product";
+import { USER_ID } from "@src/shared/constants/user";
 
 const cx = classNames.bind(styles);
 

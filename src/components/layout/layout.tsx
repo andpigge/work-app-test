@@ -11,7 +11,7 @@ import { useToast } from '@chakra-ui/react'
 import { setCart, setCartId, setCartSuccess } from "@src/redux/slices/cart-slice";
 import { useGetCartUserQuery } from "@src/redux/api/cart-api-slice";
 import { getFilteredCart } from "@src/components/cart/lib/get-filtered-cart";
-import { USER_ID } from "@src/components/cart/constants";
+import { USER_ID } from "@src/shared/constants/user";
 import { useLazyGetProductsQuery } from "@src/redux/api/products-api-slice";
 
 export const Layout = ({ children }: { children: ReactNode }) => {

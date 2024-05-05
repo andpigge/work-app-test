@@ -10,17 +10,22 @@ import { GetProductItem } from "@src/shared/types/product";
 import { useDeleteProductMutation } from "@src/redux/api/products-api-slice";
 import { useAppDispatch, useAppSelector } from "@src/redux/hooks";
 import { setProducts } from "@src/redux/slices/products-slice";
-import { setCart } from "@src/redux/slices/cart-slice";
+import { pushCart, setCart } from "@src/redux/slices/cart-slice";
+import { useAddCartMutation } from "@src/redux/api/cart-api-slice";
+import { USER_ID } from "@src/shared/constants/user";
 
 export const Card = ({ product }: { product: GetProductItem }) => {
   const [deleteProduct] = useDeleteProductMutation();
 
   const { products } = useAppSelector((store) => store.products);
   const { cart } = useAppSelector((store) => store.cart);
+  const { userId } = useAppSelector((store) => store.user);
 
   const toast = useToast()
 
   const dispatch = useAppDispatch();
+
+  const [addProductAnCart] = useAddCartMutation();
 
   const deleteCard = () => {
     const newProducts = products?.concat() || []
@@ -45,7 +50,39 @@ export const Card = ({ product }: { product: GetProductItem }) => {
   }
 
   const onClickHandler = () => {
-    console.log(true)
+    const { category, id, image, price, title } = product
+    const findCart = cart.find((item) => item.id === id)
+    const oldCart = cart
+
+    if (findCart) {
+      const filterCart = cart?.map((features) => {
+        if (features.id === id) {
+          const copyFindCart = {...findCart}
+          copyFindCart.quantity += 1
+          return copyFindCart
+        }
+        return features
+      })
+  
+      dispatch(setCart(filterCart))
+    }
+    else {
+      dispatch(pushCart({ category, id, image, price, title, quantity: 1 }))
+    }
+
+    const data = { userId: userId || USER_ID, data: new Date(), products: [{ productId: product.id, quantity: 1 }] }
+    addProductAnCart(data)
+      .unwrap()
+      .then()
+      .catch(() => {
+        toast({
+          title: 'Не удалось добавить товар в корзину',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
+        dispatch(setCart(oldCart))
+      })
   }
 
   return (
@@ -84,7 +121,7 @@ export const Card = ({ product }: { product: GetProductItem }) => {
             <Button variant='solid' colorScheme='blue'>
               Купить товар
             </Button>
-            <Button variant='ghost' colorScheme='blue'>
+            <Button variant='ghost' colorScheme='blue' onClick={onClickHandler}>
               Добавить в корзину
             </Button>
           </ButtonGroup>

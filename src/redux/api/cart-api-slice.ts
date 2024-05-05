@@ -22,7 +22,14 @@ const cartApi = apiSlice.injectEndpoints({
         method: "DELETE"
       }),
     }),
+    addCart: build.mutation<{ id: number }, EditCart>({
+      query: (data) => ({
+        url: `/carts/`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useGetCartUserQuery, useEditCartMutation, useDeleteCartMutation } = cartApi;
+export const { useGetCartUserQuery, useEditCartMutation, useDeleteCartMutation, useAddCartMutation } = cartApi;
