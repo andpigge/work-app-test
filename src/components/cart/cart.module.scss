@@ -19,6 +19,8 @@
 .cardList {
   width: 100%;
   max-width: 820px;
+  gap: 32px;
+  display: grid;
 }
 
 .price {
@@ -71,10 +73,12 @@
     left: 0;
     width: 100%;
     max-width: none;
+    background-color: white;
   }
 
   .container {
     flex-wrap: wrap;
+    margin-bottom: 220px;
   }
 
   .item {

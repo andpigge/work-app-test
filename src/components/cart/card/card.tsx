@@ -2,12 +2,12 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import classNames from 'classnames/bind';
 
 import styles from "./card.module.scss";
-import { Tag } from "@chakra-ui/react";
+import { Tag, useToast } from "@chakra-ui/react";
 import Image from 'next/image'
 import { DeleteIcon } from '@chakra-ui/icons'
 import { Product, setCart } from "@src/redux/slices/cart-slice";
 import { useAppDispatch, useAppSelector } from "@src/redux/hooks";
-import { useEditCartMutation, useGetCartUserQuery } from "@src/redux/api/carts-api-slice";
+import { useDeleteCartMutation, useEditCartMutation, useGetCartUserQuery } from "@src/redux/api/cart-api-slice";
 import { CountingNumber } from "@src/shared/ui/сounting-number";
 import { CHANGE_INTERVAL_CART, USER_ID } from "../constants";
 import { findQuantityProduct } from "../lib/find-quantity-product";
@@ -23,8 +23,8 @@ export const Card = ({ features, setIsReady }: Props) => {
   const { userId } = useAppSelector((store) => store.user);
   const { cart, cartId } = useAppSelector((store) => store.cart);
 
-  // TODO isError выдавать страницу 500
-  const [updateCart, { isError }] = useEditCartMutation()
+  const [updateCart] = useEditCartMutation()
+  const [deleteCart] = useDeleteCartMutation();
   const {data = []} = useGetCartUserQuery(userId || USER_ID);
 
   const [counter, setCounter] = useState(features.quantity);
@@ -32,6 +32,8 @@ export const Card = ({ features, setIsReady }: Props) => {
   const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null)
 
   const dispatch = useAppDispatch();
+
+  const toast = useToast()
 
   const setTimeoutAllowed = () => {
     if (timerId) return
@@ -47,13 +49,6 @@ export const Card = ({ features, setIsReady }: Props) => {
   }, [counter])
 
   useEffect(() => {
-    if (findQuantityProduct(data[0], features.id) === counter) {
-      setIsReady(true)
-      return
-    }
-
-    setIsReady(false)
-
     const { quantity, ...restFeatures } = features
     const newCart = { quantity: counter, ...restFeatures }
 
@@ -65,6 +60,13 @@ export const Card = ({ features, setIsReady }: Props) => {
     })
 
     dispatch(setCart(filterCart || []))
+
+    if (findQuantityProduct(data[0], features.id) === counter) {
+      setIsReady(true)
+      return
+    }
+
+    setIsReady(false)
 
     if (!allowed) return
 
@@ -81,7 +83,24 @@ export const Card = ({ features, setIsReady }: Props) => {
       })
   }, [counter, allowed])
 
-  const deleteCard = () => console.log('deleted')
+  const deleteCard = () => {
+    const newCart = cart?.concat() || []
+    const filterCart = newCart?.filter((item) => item.id !== features.id) || []
+    dispatch(setCart(filterCart || []))
+
+    deleteCart(features.id)
+      .unwrap()
+      .then()
+      .catch((error: { data: string }) => {
+        dispatch(setCart(newCart))
+        toast({
+          title: error.data,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
+      })
+  }
 
   return (
     <>

@@ -1,7 +1,7 @@
 import { Cart, EditCart } from "@src/shared/types/cart";
 import { apiSlice } from "./api-slice";
 
-const cartsApi = apiSlice.injectEndpoints({
+const cartApi = apiSlice.injectEndpoints({
   endpoints: (build) => ({
     getCartUser: build.query<Cart[], number>({
       query: (userId) => ({
@@ -16,7 +16,13 @@ const cartsApi = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    deleteCart: build.mutation<{ id: number }, number>({
+      query: (cartId) => ({
+        url: `/carts/${cartId}`,
+        method: "DELETE"
+      }),
+    }),
   }),
 });
 
-export const { useGetCartUserQuery, useEditCartMutation } = cartsApi;
+export const { useGetCartUserQuery, useEditCartMutation, useDeleteCartMutation } = cartApi;

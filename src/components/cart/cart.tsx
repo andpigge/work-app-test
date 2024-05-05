@@ -3,7 +3,7 @@ import classNames from 'classnames/bind';
 
 import styles from "./cart.module.scss";
 import { Card } from "./card";
-import { useGetCartUserQuery } from "@src/redux/api/carts-api-slice";
+import { useGetCartUserQuery } from "@src/redux/api/cart-api-slice";
 import { useAppDispatch, useAppSelector } from "@src/redux/hooks";
 import { setCart, setCartId, setCartSuccess } from "@src/redux/slices/cart-slice";
 import { useLazyGetProductsQuery } from "@src/redux/api/products-api-slice";
@@ -38,12 +38,7 @@ export const Cart = () => {
   }, [isSuccessGetCart, cartSuccess])
 
   useEffect(() => {
-    console.log(isReady)
-  }, [isReady])
-
-  useEffect(() => {
     if (isSuccessProduct && isSuccessGetCart) {
-      console.log(1)
       setIsReady(true)
     }
   }, [isSuccessProduct, isSuccessGetCart])
@@ -58,6 +53,7 @@ export const Cart = () => {
             </li>
           )
         })}
+        { (!cart?.length && isSuccessProduct && isSuccessGetCart) ? <h2 className="headline2">Закажите что-нибудь</h2> : <></> }
       </ul>
 
       {total && <div className={styles.containerSum}>
@@ -78,9 +74,9 @@ export const Cart = () => {
             {total?.price.toFixed(2)} Рублей
             </p>
           </li>
-          <Button variant='solid' colorScheme='blue' isLoading={!isReady} loadingText='Оформить заказ'>
+          {cart?.length ? <Button variant='solid' colorScheme='blue' isLoading={!isReady} loadingText='Оформить заказ' disabled>
             Оформить заказ
-          </Button>
+          </Button> : undefined}
         </ul>
       </div>}
     </div>
